@@ -8,9 +8,24 @@ $usuarioController = new UsuarioController($gestor);
 
 $accion = $_GET['accion'] ?? 'index';
 
-switch ($accion) {
+if (!isset($_SESSION['usuario_id']) && isset($_COOKIE['usuario_login'])) {
+    $emailRecuperado = base64_decode($_COOKIE['usuario_login'], true);
 
-    // Gestión de usuarios
+    if ($emailRecuperado !== false) {
+        $usuario = $gestor->buscarUsuarioPorEmail($emailRecuperado);
+
+        if ($usuario) {
+            $_SESSION['usuario_id'] = $usuario->getId();
+            $_SESSION['usuarioEmail'] = $usuario->getEmail();
+        } else {
+            setcookie('usuario_login', '', time() - 3600, '/');
+        }
+    } else {
+        setcookie('usuario_login', '', time() - 3600, '/');
+    }
+}
+
+switch ($accion) {
     case 'alta':
         $usuarioController->alta();
         break;
@@ -23,7 +38,6 @@ switch ($accion) {
         $usuarioController->logout();
         break;
 
-    // Gestión de vehículos
     case 'agregar':
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: index.php?accion=login");

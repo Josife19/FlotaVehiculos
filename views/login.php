@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Inicio de sesión</title>
 </head>
 <body>
@@ -16,6 +17,9 @@
 
         Contraseña:<br>
         <input type="password" name="password" required><br><br>
+
+        <input type="checkbox" name="recordarme" id="recordarme">
+        <label for="recordarme">Recordarme</label><br><br>
 
         <button type="submit">Entrar</button>
     </form>

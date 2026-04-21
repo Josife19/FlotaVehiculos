@@ -1,7 +1,8 @@
 <?php
-class GestorPDO extends Connection {
-
-    public function listar() {
+class GestorPDO extends Connection
+{
+    public function listar()
+    {
         $consulta = "SELECT * FROM flotaVehiculos";
         $rtdo = $this->getConn()->query($consulta);
         $vehiculos = [];
@@ -19,37 +20,42 @@ class GestorPDO extends Connection {
         return $vehiculos;
     }
 
-    public function agregar(Vehiculo $vehiculo) {
-        $sql = 'INSERT INTO flotaVehiculos (marca, modelo, precioDia) VALUES (:marca, :modelo, :precio)';
-        $stmt = $this->conn->prepare($sql);
+    public function agregar(Vehiculo $vehiculo)
+    {
+        $sql = "INSERT INTO flotaVehiculos (marca, modelo, precioDia) 
+                VALUES (:marca, :modelo, :precioDia)";
+        $stmt = $this->getConn()->prepare($sql);
         $stmt->bindValue(':marca', $vehiculo->getMarca());
         $stmt->bindValue(':modelo', $vehiculo->getModelo());
-        $stmt->bindValue(':precio', $vehiculo->getPrecioDia());
+        $stmt->bindValue(':precioDia', $vehiculo->getPrecioDia());
 
         return $stmt->execute();
     }
 
-    public function eliminar($id) {
-        $sql = 'DELETE FROM flotaVehiculos WHERE id = :id';
-        $stmt = $this->conn->prepare($sql);
+    public function eliminar($id)
+    {
+        $sql = "DELETE FROM flotaVehiculos WHERE id = :id";
+        $stmt = $this->getConn()->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
 
-    public function editar($id, $marca) {
-        $sql = 'UPDATE flotaVehiculos SET marca = :marca WHERE id = :id';
-        $stmt = $this->conn->prepare($sql);
+    public function editar($id, $marca)
+    {
+        $sql = "UPDATE flotaVehiculos SET marca = :marca WHERE id = :id";
+        $stmt = $this->getConn()->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':marca', $marca);
 
         return $stmt->execute();
     }
 
-    public function registrarUsuario(Usuario $usuario) {
+    public function registrarUsuario(Usuario $usuario)
+    {
         try {
-            $sql = 'INSERT INTO Usuario (email, password) VALUES (:email, :password)';
-            $stmt = $this->conn->prepare($sql);
+            $sql = "INSERT INTO Usuario (email, password) VALUES (:email, :password)";
+            $stmt = $this->getConn()->prepare($sql);
             $stmt->bindValue(':email', $usuario->getEmail());
             $stmt->bindValue(':password', $usuario->getPassword());
 
@@ -60,10 +66,11 @@ class GestorPDO extends Connection {
         }
     }
 
-    public function obtenerUsuarioPorEmail($email) {
+    public function buscarUsuarioPorEmail($email)
+    {
         try {
-            $sql = 'SELECT * FROM Usuario WHERE email = :email';
-            $stmt = $this->conn->prepare($sql);
+            $sql = "SELECT * FROM Usuario WHERE email = :email LIMIT 1";
+            $stmt = $this->getConn()->prepare($sql);
             $stmt->bindValue(':email', $email);
             $stmt->execute();
 
@@ -80,3 +87,4 @@ class GestorPDO extends Connection {
         }
     }
 }
+?>
